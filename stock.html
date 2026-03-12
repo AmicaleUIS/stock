@@ -23,20 +23,25 @@
           <h2>État du stock</h2>
           
         </div>
-<button id="refresh-stock" type="button">Actualiser</button>
+<div class="stock-toolbar">
+  <button id="refresh-stock" type="button">Actualiser</button>
+  <button id="edit-stock" type="button">Modifier les stocks</button>
+</div>
+
 <p id="stock-status"></p>
 
-<table>
+<table class="stock-table">
   <thead>
     <tr>
-      <th>Produit</th>
       <th>Catégorie</th>
+      <th>Produit</th>
       <th>Stock réel</th>
+      <th>Cartons</th>
       <th>En cours</th>
       <th>Ventes 30 jours</th>
-      <th>Réappro en cours</th>
-      <th>Disponible projeté</th>
+      <th>Réappro</th>
       <th>Unité</th>
+      <th>Action</th>
     </tr>
   </thead>
   <tbody id="stock-body"></tbody>

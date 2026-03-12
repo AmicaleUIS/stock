@@ -109,3 +109,36 @@ th, td { text-align: left; padding: 12px; border-bottom: 1px solid var(--line); 
   background: #132f4a;
   color: #d8ecff;
 }
+
+.stock-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.stock-table th,
+.stock-table td {
+  padding: 10px;
+  border-bottom: 1px solid #2c2c2c;
+  text-align: left;
+}
+
+.row-biere td {
+  background: rgba(40, 90, 180, 0.18);
+}
+
+.row-goodies td {
+  background: rgba(40, 140, 80, 0.16);
+}
+
+.stock-toolbar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.small-btn {
+  padding: 6px 10px;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+}

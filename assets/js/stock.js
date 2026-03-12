@@ -10,15 +10,39 @@ function sumByProduct(rows, productIdField = "product_id", qtyField = "quantity_
 
 function getCartons(item, units) {
   if (item.category === "biere" && Number(item.unit_size) > 1) {
-    return Math.floor(units / Number(item.unit_size));
+    const cartons = Math.floor(units / Number(item.unit_size));
+    const reste = units % Number(item.unit_size);
+    return `${cartons} c / ${reste} b`;
   }
   return "-";
 }
 
-function stockClass(value) {
-  if (value <= 0) return "cell-danger";
-  if (value <= 5) return "cell-warn";
-  return "cell-ok";
+function getCategoryClass(category) {
+  if (category === "biere") return "row-biere";
+  return "row-goodies";
+}
+
+async function updateStock(productId, currentStock) {
+  const newValue = prompt("Nouveau stock :", currentStock);
+  if (newValue === null) return;
+
+  const parsed = Number(newValue);
+  if (Number.isNaN(parsed) || parsed < 0) {
+    alert("Valeur invalide.");
+    return;
+  }
+
+  const { error } = await window.sb
+    .from("products")
+    .update({ stock_units: parsed })
+    .eq("id", productId);
+
+  if (error) {
+    alert("Erreur : " + error.message);
+    return;
+  }
+
+  await loadStock();
 }
 
 async function loadStock() {
@@ -26,7 +50,7 @@ async function loadStock() {
   const status = document.getElementById("stock-status");
   if (!tbody) return;
 
-  tbody.innerHTML = `<tr><td colspan="8">Chargement...</td></tr>`;
+  tbody.innerHTML = `<tr><td colspan="9">Chargement...</td></tr>`;
   if (status) status.textContent = "Chargement...";
 
   const auth = await requireAuth(["admin", "super_admin", "user"]);
@@ -36,12 +60,7 @@ async function loadStock() {
   const lastMonth = new Date();
   lastMonth.setDate(now.getDate() - 30);
 
-  const [
-    productsRes,
-    pendingSalesRes,
-    monthlySalesRes,
-    supplierRes
-  ] = await Promise.all([
+  const [productsRes, pendingSalesRes, monthlySalesRes, supplierRes] = await Promise.all([
     window.sb
       .from("products")
       .select("id,name,category,stock_units,unit_size,unit_label,is_active")
@@ -67,19 +86,8 @@ async function loadStock() {
   ]);
 
   if (productsRes.error) {
-    console.error(productsRes.error);
-    tbody.innerHTML = `<tr><td colspan="8">Erreur produits : ${productsRes.error.message}</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="9">Erreur : ${productsRes.error.message}</td></tr>`;
     return;
-  }
-
-  if (pendingSalesRes.error) {
-    console.error(pendingSalesRes.error);
-  }
-  if (monthlySalesRes.error) {
-    console.error(monthlySalesRes.error);
-  }
-  if (supplierRes.error) {
-    console.error(supplierRes.error);
   }
 
   const products = productsRes.data || [];
@@ -94,20 +102,33 @@ async function loadStock() {
     const pending = Number(pendingMap.get(item.id) || 0);
     const monthly = Number(monthlyMap.get(item.id) || 0);
     const incoming = Number(supplierMap.get(item.id) || 0);
-    const projected = stock - pending + incoming;
 
     const tr = document.createElement("tr");
+    tr.className = getCategoryClass(item.category);
+
     tr.innerHTML = `
-      <td>${item.name}</td>
       <td>${item.category}</td>
+      <td>${item.name}</td>
       <td>${stock}</td>
-      <td class="cell-warn">${pending}</td>
-      <td class="cell-info">${monthly}</td>
-      <td class="cell-ok">${incoming}</td>
-      <td class="${stockClass(projected)}">${projected}</td>
+      <td>${getCartons(item, stock)}</td>
+      <td>${pending}</td>
+      <td>${monthly}</td>
+      <td>${incoming}</td>
       <td>${item.unit_label}</td>
+      <td>
+        <button class="small-btn" data-id="${item.id}" data-stock="${stock}">
+          Modifier
+        </button>
+      </td>
     `;
+
     tbody.appendChild(tr);
+  });
+
+  tbody.querySelectorAll(".small-btn").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      await updateStock(Number(btn.dataset.id), Number(btn.dataset.stock));
+    });
   });
 
   if (status) {
@@ -118,4 +139,7 @@ async function loadStock() {
 document.addEventListener("DOMContentLoaded", () => {
   loadStock();
   document.getElementById("refresh-stock")?.addEventListener("click", loadStock);
+  document.getElementById("edit-stock")?.addEventListener("click", () => {
+    alert("Clique sur 'Modifier' sur la ligne du produit à ajuster.");
+  });
 });
