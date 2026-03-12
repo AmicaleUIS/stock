@@ -1,27 +1,22 @@
-const form = document.getElementById('loginForm');
+const form = document.getElementById("login-form");
 
-form?.addEventListener('submit', async (event) => {
-  event.preventDefault();
-  setMessage('loginMessage', 'Connexion...');
+if (form) {
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-  const email = document.getElementById('email').value.trim();
-  const password = document.getElementById('password').value;
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
 
-  const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
-  if (error) {
-    setMessage('loginMessage', error.message, true);
-    return;
-  }
+    const { data, error } = await window.sb.auth.signInWithPassword({
+      email,
+      password
+    });
 
-  const authInfo = await getCurrentUserAndProfile();
-  if (!authInfo.profile) {
-    setMessage('loginMessage', 'Compte connecté, mais profil non trouvé.', true);
-    return;
-  }
+    if (error) {
+      alert(error.message);
+      return;
+    }
 
-  if (['admin', 'super_admin'].includes(authInfo.profile.role)) {
-    window.location.href = 'vente.html';
-  } else {
-    window.location.href = 'vente.html';
-  }
-});
+    window.location.href = "vente.html";
+  });
+}
