@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vente rapide</title>
+  <link rel="stylesheet" href="assets/css/main.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <h1>Vente rapide</h1>
+      <nav class="nav-inline">
+        <a href="stock.html">Stock</a>
+        <a href="admin.html">Admin</a>
+        <button id="logoutBtn" class="ghost">Déconnexion</button>
+      </nav>
+    </header>
+
+    <main class="container">
+      <section class="card quick-sale">
+        <div class="section-head">
+          <h2>Nouvelle vente</h2>
+          <p id="whoami" class="muted"></p>
+        </div>
+
+        <form id="quickSaleForm" class="stack">
+          <label>
+            <span>Produit</span>
+            <select id="productSelect" required></select>
+          </label>
+
+          <div class="grid two">
+            <label>
+              <span>Mode de vente</span>
+              <select id="saleMode">
+                <option value="unit">À l’unité</option>
+                <option value="carton">Par carton</option>
+                <option value="pack">Pack / coffret</option>
+              </select>
+            </label>
+
+            <label>
+              <span>Quantité</span>
+              <input id="quantity" type="number" min="1" step="1" value="1" required />
+            </label>
+          </div>
+
+          <label>
+            <span>Note</span>
+            <input id="saleNote" type="text" maxlength="140" placeholder="Facultatif" />
+          </label>
+
+          <button class="button" type="submit">Enregistrer la vente</button>
+        </form>
+
+        <p id="saleMessage" class="message"></p>
+      </section>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/js/supabase-client.js"></script>
+  <script src="assets/js/common.js"></script>
+  <script src="assets/js/vente.js"></script>
+</body>
+</html>
