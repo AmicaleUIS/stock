@@ -72,3 +72,12 @@ async function logout() {
   await window.sb.auth.signOut();
   window.location.href = "login.html";
 }
+
+function setMessage(elementId, text, isError = false) {
+  const el = document.getElementById(elementId);
+  if (!el) return;
+
+  el.textContent = text;
+  el.className = isError ? "message error" : "message success";
+  el.style.display = "block";
+}

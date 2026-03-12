@@ -1,33 +1,57 @@
 async function loadStock() {
-  setMessage('stockMessage', 'Chargement...');
-  const tbody = document.getElementById('stockBody');
-  tbody.innerHTML = '';
+  const tbody = document.getElementById("stock-body");
+  if (!tbody) return;
 
-  const { data, error } = await supabaseClient
-    .from('products')
-    .select('id,name,category,stock_units,unit_label,unit_size,is_active')
-    .eq('is_active', true)
-    .order('category')
-    .order('name');
+  tbody.innerHTML = "<tr><td colspan='5'>Chargement...</td></tr>";
 
-  if (error) {
-    setMessage('stockMessage', error.message, true);
+  if (!window.sb) {
+    tbody.innerHTML = "<tr><td colspan='5'>Client Supabase introuvable.</td></tr>";
     return;
   }
 
-  data.forEach((product) => {
-    const tr = document.createElement('tr');
+  const { data, error } = await window.sb
+    .from("products")
+    .select("id, name, category, stock_units, unit_size, unit_label")
+    .eq("is_active", true)
+    .order("category", { ascending: true })
+    .order("name", { ascending: true });
+
+  if (error) {
+    console.error("Erreur stock :", error);
+    tbody.innerHTML = `<tr><td colspan='5'>Erreur : ${error.message}</td></tr>`;
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    tbody.innerHTML = "<tr><td colspan='5'>Aucune donnée.</td></tr>";
+    return;
+  }
+
+  tbody.innerHTML = "";
+
+  data.forEach((item) => {
+    const cartons =
+      item.category === "biere" && item.unit_size > 1
+        ? Math.floor(item.stock_units / item.unit_size)
+        : "-";
+
+    const tr = document.createElement("tr");
     tr.innerHTML = `
-      <td>${product.name}</td>
-      <td>${product.category}</td>
-      <td>${formatStock(product)}</td>
-      <td>${product.category === 'biere' ? `1 carton = ${product.unit_size} bouteilles` : product.unit_label}</td>
+      <td>${item.name}</td>
+      <td>${item.category}</td>
+      <td>${item.stock_units}</td>
+      <td>${cartons}</td>
+      <td>${item.unit_label}</td>
     `;
     tbody.appendChild(tr);
   });
-
-  setMessage('stockMessage', `${data.length} produit(s) affiché(s).`);
 }
 
-document.getElementById('refreshStock')?.addEventListener('click', loadStock);
-loadStock();
+document.addEventListener("DOMContentLoaded", () => {
+  loadStock();
+
+  const refreshBtn = document.getElementById("refresh-stock");
+  if (refreshBtn) {
+    refreshBtn.addEventListener("click", loadStock);
+  }
+});
