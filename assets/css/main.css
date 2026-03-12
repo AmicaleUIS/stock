@@ -90,3 +90,22 @@ th, td { text-align: left; padding: 12px; border-bottom: 1px solid var(--line); 
   border: 1px solid #2c5d8a;
 }
 
+.cell-ok {
+  background: #16361f;
+  color: #d7ffe0;
+}
+
+.cell-warn {
+  background: #4b3312;
+  color: #ffe5b4;
+}
+
+.cell-danger {
+  background: #4a1717;
+  color: #ffd7d7;
+}
+
+.cell-info {
+  background: #132f4a;
+  color: #d8ecff;
+}
