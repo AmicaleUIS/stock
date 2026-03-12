@@ -142,3 +142,89 @@ th, td { text-align: left; padding: 12px; border-bottom: 1px solid var(--line); 
   border-radius: 8px;
   cursor: pointer;
 }
+
+.stock-toolbar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.toolbar-btn {
+  border: 0;
+  border-radius: 12px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.toolbar-btn:hover {
+  transform: translateY(-1px);
+  opacity: 0.95;
+}
+
+.primary-btn {
+  background: #1d4ed8;
+  color: white;
+}
+
+.secondary-btn {
+  background: #0f766e;
+  color: white;
+}
+
+.stock-status {
+  margin-bottom: 12px;
+  color: #555;
+  font-size: 14px;
+}
+
+.stock-table {
+  width: 100%;
+  border-collapse: collapse;
+  overflow: hidden;
+  border-radius: 14px;
+  background: white;
+}
+
+.stock-table th,
+.stock-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #e6e6e6;
+  text-align: left;
+}
+
+.stock-table thead th {
+  background: #f5f5f5;
+  font-weight: 700;
+}
+
+.row-biere td {
+  background: rgba(59, 130, 246, 0.10);
+}
+
+.row-goodies td {
+  background: rgba(34, 197, 94, 0.10);
+}
+
+.category-cell {
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.action-btn {
+  border: 0;
+  border-radius: 10px;
+  padding: 8px 12px;
+  background: #111827;
+  color: white;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.action-btn:hover {
+  opacity: 0.92;
+}
