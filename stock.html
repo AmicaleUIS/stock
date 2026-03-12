@@ -21,21 +21,23 @@
       <section class="card">
         <div class="section-head">
           <h2>État du stock</h2>
-          <button id="refreshStock" class="button secondary">Actualiser</button>
+          
         </div>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Produit</th>
-                <th>Catégorie</th>
-                <th>Stock</th>
-                <th>Conditionnement</th>
-              </tr>
-            </thead>
-            <tbody id="stockBody"></tbody>
-          </table>
-        </div>
+       <button id="refresh-stock" type="button">Actualiser</button>
+<p id="stock-status"></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Produit</th>
+      <th>Catégorie</th>
+      <th>Stock</th>
+      <th>Cartons</th>
+      <th>Unité</th>
+    </tr>
+  </thead>
+  <tbody id="stock-body"></tbody>
+</table>
         <p id="stockMessage" class="message"></p>
       </section>
     </main>
