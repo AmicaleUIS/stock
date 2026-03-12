@@ -65,3 +65,27 @@ th, td { text-align: left; padding: 12px; border-bottom: 1px solid var(--line); 
   .grid.two, .grid.three, .admin-grid { grid-template-columns: 1fr; }
   .topbar { align-items: flex-start; flex-direction: column; }
 }
+.message {
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+.message.error {
+  background: #3a1010;
+  color: #ffd7d7;
+  border: 1px solid #7a2b2b;
+}
+
+.message.success {
+  background: #113a1e;
+  color: #d9ffe4;
+  border: 1px solid #2d7a46;
+}
+
+.message.info {
+  background: #10253a;
+  color: #d8ecff;
+  border: 1px solid #2c5d8a;
+}
