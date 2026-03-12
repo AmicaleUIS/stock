@@ -10,17 +10,12 @@
   <main class="container narrow">
     <section class="card">
       <h1>Connexion</h1>
-      <form id="loginForm" class="stack">
-        <label>
-          <span>Email</span>
-          <input type="email" id="email" />
-        </label>
-        <label>
-          <span>Mot de passe</span>
-          <input type="password" id="password" />
-        </label>
-        <button class="button" type="submit">Se connecter</button>
-      </form>
+      <form id="login-form">
+  <input type="email" id="email" autocomplete="email" />
+  <input type="password" id="password" autocomplete="current-password" />
+  <div id="login-message" class="message" style="display:none;"></div>
+  <button type="submit">Se connecter</button>
+</form>
       <div id="login-message" class="message" style="display:none;"></div>
     </section>
   </main>

@@ -1,5 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("login-form");
+  const emailInput = document.getElementById("email");
+  const passwordInput = document.getElementById("password");
   const messageBox = document.getElementById("login-message");
 
   function showMessage(text, type = "error") {
@@ -7,7 +9,6 @@ document.addEventListener("DOMContentLoaded", () => {
       alert(text);
       return;
     }
-
     messageBox.textContent = text;
     messageBox.className = `message ${type}`;
     messageBox.style.display = "block";
@@ -18,12 +19,8 @@ document.addEventListener("DOMContentLoaded", () => {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const emailInput = document.getElementById("email");
-    const passwordInput = document.getElementById("password");
-    const submitBtn = form.querySelector('button[type="submit"]');
-
-    const email = emailInput?.value.trim() || "";
-    const password = passwordInput?.value || "";
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
 
     if (!email || !password) {
       showMessage("Merci de remplir l’email et le mot de passe.");
@@ -31,12 +28,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (!window.sb) {
-      showMessage("Connexion Supabase indisponible. Vérifie supabase-client.js.");
+      showMessage("Client Supabase introuvable.");
       return;
     }
 
     try {
-      if (submitBtn) submitBtn.disabled = true;
       showMessage("Connexion en cours...", "info");
 
       const { data, error } = await window.sb.auth.signInWithPassword({
@@ -45,22 +41,19 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       if (error) {
-        if (
-          error.message.toLowerCase().includes("invalid login credentials")
-        ) {
+        console.error("Erreur Supabase Auth :", error);
+
+        if (error.message?.toLowerCase().includes("invalid login credentials")) {
           showMessage("Email ou mot de passe incorrect.");
         } else {
-          showMessage(`Erreur de connexion : ${error.message}`);
+          showMessage("Erreur de connexion : " + error.message);
         }
-
-        if (submitBtn) submitBtn.disabled = false;
         return;
       }
 
       const user = data?.user;
       if (!user) {
         showMessage("Utilisateur non reconnu.");
-        if (submitBtn) submitBtn.disabled = false;
         return;
       }
 
@@ -70,15 +63,14 @@ document.addEventListener("DOMContentLoaded", () => {
         .eq("id", user.id)
         .single();
 
-      if (profileError || !profile) {
+      if (profileError) {
+        console.error("Erreur profil :", profileError);
         showMessage("Profil introuvable dans la base.");
-        if (submitBtn) submitBtn.disabled = false;
         return;
       }
 
-      if (!profile.is_active) {
+      if (!profile?.is_active) {
         showMessage("Compte désactivé.");
-        if (submitBtn) submitBtn.disabled = false;
         return;
       }
 
@@ -90,8 +82,8 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = "stock.html";
       }
     } catch (err) {
-      showMessage(`Erreur inattendue : ${err.message}`);
-      if (submitBtn) submitBtn.disabled = false;
+      console.error("Erreur JS :", err);
+      showMessage("Erreur inattendue : " + err.message);
     }
   });
 });
